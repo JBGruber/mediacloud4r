@@ -22,7 +22,7 @@ mc_collection(id, .token = NULL)
 ## Value
 
 A tibble with one row. See
-[`mc_collections()`](https://jbgruber.github.io/mediacloud2/reference/mc_collections.md)
+[`mc_collections()`](https://jbgruber.github.io/mediacloud4r/reference/mc_collections.md)
 for the columns.
 
 ## Examples

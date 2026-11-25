@@ -32,9 +32,9 @@ mc_story_sample(
 - collection_id, source_id:
 
   ids to search within, as returned by
-  [`mc_collections()`](https://jbgruber.github.io/mediacloud2/reference/mc_collections.md)
+  [`mc_collections()`](https://jbgruber.github.io/mediacloud4r/reference/mc_collections.md)
   and
-  [`mc_sources()`](https://jbgruber.github.io/mediacloud2/reference/mc_sources.md).
+  [`mc_sources()`](https://jbgruber.github.io/mediacloud4r/reference/mc_sources.md).
   At least one of the two is required. Vectors are allowed.
 
 - platform:
@@ -51,7 +51,7 @@ mc_story_sample(
 ## Value
 
 A tibble with one row per story, with the same columns as
-[`mc_story_list()`](https://jbgruber.github.io/mediacloud2/reference/mc_story_list.md).
+[`mc_story_list()`](https://jbgruber.github.io/mediacloud4r/reference/mc_story_list.md).
 
 ## Examples
 

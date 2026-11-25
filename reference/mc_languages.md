@@ -32,9 +32,9 @@ mc_languages(
 - collection_id, source_id:
 
   ids to search within, as returned by
-  [`mc_collections()`](https://jbgruber.github.io/mediacloud2/reference/mc_collections.md)
+  [`mc_collections()`](https://jbgruber.github.io/mediacloud4r/reference/mc_collections.md)
   and
-  [`mc_sources()`](https://jbgruber.github.io/mediacloud2/reference/mc_sources.md).
+  [`mc_sources()`](https://jbgruber.github.io/mediacloud4r/reference/mc_sources.md).
   At least one of the two is required. Vectors are allowed.
 
 - limit:

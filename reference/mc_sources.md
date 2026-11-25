@@ -14,7 +14,7 @@ mc_sources(collection_id = NULL, name = NULL, max_results = Inf, .token = NULL)
 
   restrict to sources in this collection. This is the usual way to use
   the function; see also
-  [`mc_collection_sources()`](https://jbgruber.github.io/mediacloud2/reference/mc_collection_sources.md).
+  [`mc_collection_sources()`](https://jbgruber.github.io/mediacloud4r/reference/mc_collection_sources.md).
 
 - name:
 

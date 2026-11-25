@@ -267,7 +267,7 @@ p <- ggplot(wave, aes(x, y)) +
 # Assemble the sticker
 sticker(
   subplot = p,
-  package = "mediacloud2",
+  package = "mediacloud4r",
   p_size = 5,
   p_y = 1.45,
   p_color = "white",

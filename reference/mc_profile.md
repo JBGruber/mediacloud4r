@@ -27,12 +27,12 @@ A tibble with one row: `id`, `username`, `is_staff`, `is_superuser`,
 
 Quota is counted per week and per provider. Endpoints do not all cost
 the same: a story list or count costs one hit,
-[`mc_languages()`](https://jbgruber.github.io/mediacloud2/reference/mc_languages.md)
+[`mc_languages()`](https://jbgruber.github.io/mediacloud4r/reference/mc_languages.md)
 two, and
-[`mc_words()`](https://jbgruber.github.io/mediacloud2/reference/mc_words.md),
-[`mc_attention_by_source()`](https://jbgruber.github.io/mediacloud2/reference/mc_attention_by_source.md)
+[`mc_words()`](https://jbgruber.github.io/mediacloud4r/reference/mc_words.md),
+[`mc_attention_by_source()`](https://jbgruber.github.io/mediacloud4r/reference/mc_attention_by_source.md)
 and
-[`mc_count_by_source()`](https://jbgruber.github.io/mediacloud2/reference/mc_count_by_source.md)
+[`mc_count_by_source()`](https://jbgruber.github.io/mediacloud4r/reference/mc_count_by_source.md)
 four.
 
 ## Examples

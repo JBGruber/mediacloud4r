@@ -1,7 +1,7 @@
 # Find the collection ids for a country
 
 A trimmed-down
-[`mc_collections()`](https://jbgruber.github.io/mediacloud2/reference/mc_collections.md)
+[`mc_collections()`](https://jbgruber.github.io/mediacloud4r/reference/mc_collections.md)
 for the job people actually need it for: turning a country name into the
 ids to search with.
 

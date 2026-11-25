@@ -1,4 +1,4 @@
 # License
 
     YEAR: 2026
-    COPYRIGHT HOLDER: mediacloud2 authors
+    COPYRIGHT HOLDER: mediacloud4r authors

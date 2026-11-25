@@ -1,6 +1,6 @@
-# mediacloud2
+# mediacloud4r
 
-The goal of mediacloud2 is to make the [Media
+The goal of mediacloud4r is to make the [Media
 Cloud](https://www.mediacloud.org) news archive usable from R. Media
 Cloud collects online news from tens of thousands of outlets worldwide
 and lets you search that archive by keyword, outlet, country and date.
@@ -12,18 +12,18 @@ your usual data wrangling and plotting code.
 
 ## Installation
 
-You can install the development version of mediacloud2 like so:
+You can install the development version of mediacloud4r like so:
 
 ``` r
 
-pak::pak("https://github.com/JBGruber/mediacloud2")
+pak::pak("https://github.com/JBGruber/mediacloud4r")
 ```
 
 # Basic Usage
 
 ``` r
 
-library(mediacloud2)
+library(mediacloud4r)
 ```
 
 ## Authentication
@@ -31,7 +31,7 @@ library(mediacloud2)
 To use the MediaCloud API, you first need to obtain a token. Head to
 <https://search.mediacloud.org/account> and create an account, if you do
 not have one already, then create a token. Or you skip that step and run
-[`mc_auth()`](https://jbgruber.github.io/mediacloud2/reference/mc_auth.md)
+[`mc_auth()`](https://jbgruber.github.io/mediacloud4r/reference/mc_auth.md)
 directly:
 
 ``` R
@@ -130,7 +130,7 @@ sources_de[, c("id", "name", "stories_per_week", "last_story")]
 
 ## Getting News Items
 
-[`mc_story_list()`](https://jbgruber.github.io/mediacloud2/reference/mc_story_list.md)
+[`mc_story_list()`](https://jbgruber.github.io/mediacloud4r/reference/mc_story_list.md)
 returns the stories matching a query. The query goes to Elasticsearch,
 so the usual `AND`/`OR`/`NOT` operators, quoted phrases and wildcards
 all work. Search terms are always paired with a date range and with at
@@ -170,7 +170,7 @@ takes a while.
 
 If you only want the shape of the coverage rather than the stories
 themselves,
-[`mc_count_over_time()`](https://jbgruber.github.io/mediacloud2/reference/mc_count_over_time.md)
+[`mc_count_over_time()`](https://jbgruber.github.io/mediacloud4r/reference/mc_count_over_time.md)
 answers in a single request:
 
 ``` r
@@ -278,8 +278,8 @@ themselves](https://github.com/mediacloud/api-client).
 
 **This R Package**:
 
-> Gruber, J. B. (2026). *mediacloud2: MediaCloud API (v4) Wrapper*. R
-> package version 0.0.0.9000. <https://github.com/JBGruber/mediacloud2>
+> Gruber, J. B. (2026). *mediacloud4r: MediaCloud API (v4) Wrapper*. R
+> package version 0.0.0.9000. <https://github.com/JBGruber/mediacloud4r>
 
 **The API**:
 
@@ -293,42 +293,42 @@ themselves](https://github.com/mediacloud/api-client).
 
 ## All functions
 
-- [`mc_attention_by_source()`](https://jbgruber.github.io/mediacloud2/reference/mc_attention_by_source.md)
+- [`mc_attention_by_source()`](https://jbgruber.github.io/mediacloud4r/reference/mc_attention_by_source.md)
   : Which sources carried the matching stories
-- [`mc_auth()`](https://jbgruber.github.io/mediacloud2/reference/mc_auth.md)
+- [`mc_auth()`](https://jbgruber.github.io/mediacloud4r/reference/mc_auth.md)
   : Authenticate for the 'MediaCloud' API
-- [`mc_collection()`](https://jbgruber.github.io/mediacloud2/reference/mc_collection.md)
+- [`mc_collection()`](https://jbgruber.github.io/mediacloud4r/reference/mc_collection.md)
   : Look up one collection by id
-- [`mc_collection_sources()`](https://jbgruber.github.io/mediacloud2/reference/mc_collection_sources.md)
+- [`mc_collection_sources()`](https://jbgruber.github.io/mediacloud4r/reference/mc_collection_sources.md)
   : Every source in a collection
-- [`mc_collections()`](https://jbgruber.github.io/mediacloud2/reference/mc_collections.md)
+- [`mc_collections()`](https://jbgruber.github.io/mediacloud4r/reference/mc_collections.md)
   : List collections
-- [`mc_count_by_source()`](https://jbgruber.github.io/mediacloud2/reference/mc_count_by_source.md)
+- [`mc_count_by_source()`](https://jbgruber.github.io/mediacloud4r/reference/mc_count_by_source.md)
   : Attention per source over time
-- [`mc_count_over_time()`](https://jbgruber.github.io/mediacloud2/reference/mc_count_over_time.md)
+- [`mc_count_over_time()`](https://jbgruber.github.io/mediacloud4r/reference/mc_count_over_time.md)
   : Count matching stories over time
-- [`mc_feeds()`](https://jbgruber.github.io/mediacloud2/reference/mc_feeds.md)
+- [`mc_feeds()`](https://jbgruber.github.io/mediacloud4r/reference/mc_feeds.md)
   : List the RSS feeds of a source
-- [`mc_find_collections()`](https://jbgruber.github.io/mediacloud2/reference/mc_find_collections.md)
+- [`mc_find_collections()`](https://jbgruber.github.io/mediacloud4r/reference/mc_find_collections.md)
   : Find the collection ids for a country
-- [`mc_languages()`](https://jbgruber.github.io/mediacloud2/reference/mc_languages.md)
+- [`mc_languages()`](https://jbgruber.github.io/mediacloud4r/reference/mc_languages.md)
   : Languages of the matching stories
-- [`mc_profile()`](https://jbgruber.github.io/mediacloud2/reference/mc_profile.md)
+- [`mc_profile()`](https://jbgruber.github.io/mediacloud4r/reference/mc_profile.md)
   : Your account, roles and quota
-- [`mc_source()`](https://jbgruber.github.io/mediacloud2/reference/mc_source.md)
+- [`mc_source()`](https://jbgruber.github.io/mediacloud4r/reference/mc_source.md)
   : Look up one source by id
-- [`mc_sources()`](https://jbgruber.github.io/mediacloud2/reference/mc_sources.md)
+- [`mc_sources()`](https://jbgruber.github.io/mediacloud4r/reference/mc_sources.md)
   : List sources
-- [`mc_story()`](https://jbgruber.github.io/mediacloud2/reference/mc_story.md)
+- [`mc_story()`](https://jbgruber.github.io/mediacloud4r/reference/mc_story.md)
   : Look up a single story
-- [`mc_story_count()`](https://jbgruber.github.io/mediacloud2/reference/mc_story_count.md)
+- [`mc_story_count()`](https://jbgruber.github.io/mediacloud4r/reference/mc_story_count.md)
   : Count stories matching a query
-- [`mc_story_list()`](https://jbgruber.github.io/mediacloud2/reference/mc_story_list.md)
+- [`mc_story_list()`](https://jbgruber.github.io/mediacloud4r/reference/mc_story_list.md)
   : Fetch matching stories
-- [`mc_story_sample()`](https://jbgruber.github.io/mediacloud2/reference/mc_story_sample.md)
+- [`mc_story_sample()`](https://jbgruber.github.io/mediacloud4r/reference/mc_story_sample.md)
   : Fetch a sample of matching stories
-- [`mc_version()`](https://jbgruber.github.io/mediacloud2/reference/mc_version.md)
+- [`mc_version()`](https://jbgruber.github.io/mediacloud4r/reference/mc_version.md)
   : Server version and connectivity check
-- [`mc_words()`](https://jbgruber.github.io/mediacloud2/reference/mc_words.md)
+- [`mc_words()`](https://jbgruber.github.io/mediacloud4r/reference/mc_words.md)
   : Top words in matching stories
 

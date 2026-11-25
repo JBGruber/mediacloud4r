@@ -22,7 +22,7 @@ mc_source(id, .token = NULL)
 ## Value
 
 A tibble with one row. See
-[`mc_sources()`](https://jbgruber.github.io/mediacloud2/reference/mc_sources.md)
+[`mc_sources()`](https://jbgruber.github.io/mediacloud4r/reference/mc_sources.md)
 for the columns.
 
 ## Examples

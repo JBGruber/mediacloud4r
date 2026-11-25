@@ -3,7 +3,7 @@
 Returns the deployed version of the Media Cloud web app. This is the
 only endpoint that answers without a token, which makes it a good test
 of connectivity and a poor test of authentication — use
-[`mc_profile()`](https://jbgruber.github.io/mediacloud2/reference/mc_profile.md)
+[`mc_profile()`](https://jbgruber.github.io/mediacloud4r/reference/mc_profile.md)
 for the latter.
 
 ## Usage

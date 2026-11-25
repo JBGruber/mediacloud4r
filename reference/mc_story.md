@@ -13,7 +13,7 @@ mc_story(id, platform = mc_platforms, .token = NULL)
 - id:
 
   a story id, as returned in the `id` column of
-  [`mc_story_list()`](https://jbgruber.github.io/mediacloud2/reference/mc_story_list.md).
+  [`mc_story_list()`](https://jbgruber.github.io/mediacloud4r/reference/mc_story_list.md).
 
 - platform:
 

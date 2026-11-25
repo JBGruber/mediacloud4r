@@ -28,7 +28,7 @@ mc_collection_sources(collection, max_results = Inf, .token = NULL)
 ## Value
 
 A tibble with one row per source, as
-[`mc_sources()`](https://jbgruber.github.io/mediacloud2/reference/mc_sources.md).
+[`mc_sources()`](https://jbgruber.github.io/mediacloud4r/reference/mc_sources.md).
 
 ## Examples
 
