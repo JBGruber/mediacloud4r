@@ -67,7 +67,9 @@ test_that("an ambiguous collection name is refused, with the candidates", {
 test_that("a name that matches nothing is refused", {
   local_fake_token()
 
-  empty <- mock_json('{"count": 0, "next": null, "previous": null, "results": []}')
+  empty <- mock_json(
+    '{"count": 0, "next": null, "previous": null, "results": []}'
+  )
   expect_error(
     httr2::with_mocked_responses(
       mock_always(empty),

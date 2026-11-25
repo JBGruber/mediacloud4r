@@ -19,12 +19,12 @@
 #' @export
 mc_version <- function(.token = NULL) {
   body <- mc_get("version", .token = .token)
-  out <- tibble::tibble(
+  tibble::tibble(
     version = body$version %||% NA_character_,
     git_rev = body$GIT_REV %||% NA_character_,
     now = as.POSIXct(body$now %||% NA_real_, origin = "1970-01-01", tz = "UTC")
-  )
-  with_raw(out, attr(body, "response"))
+  ) |>
+    with_raw(attr(body, "response"))
 }
 
 
@@ -54,7 +54,7 @@ mc_version <- function(.token = NULL) {
 mc_profile <- function(.token = NULL) {
   body <- mc_get("auth/profile", .token = .token)
   quota <- body$quota
-  out <- tibble::tibble(
+  tibble::tibble(
     id = body$id %||% NA_integer_,
     username = body$username %||% NA_character_,
     is_staff = body$is_staff %||% NA,
@@ -64,6 +64,6 @@ mc_profile <- function(.token = NULL) {
     quota_hits = quota$hits %||% NA_integer_,
     quota_week = parse_date(quota$week %||% NA_character_),
     quota_limit = quota$limit %||% NA_integer_
-  )
-  with_raw(out, attr(body, "response"))
+  ) |>
+    with_raw(attr(body, "response"))
 }

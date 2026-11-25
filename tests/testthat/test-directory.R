@@ -99,8 +99,10 @@ test_that("mc_sources parses the month-only last_story", {
   expect_s3_class(out, "tbl_df")
   expect_s3_class(out$last_story, "Date")
   # this endpoint only reports the month, so every date is a first
-  expect_true(all(is.na(out$last_story) |
-                    format(out$last_story, "%d") == "01"))
+  expect_true(all(
+    is.na(out$last_story) |
+      format(out$last_story, "%d") == "01"
+  ))
   expect_s3_class(out$created_at, "POSIXct")
   expect_type(out$alternative_domains, "list")
 })
@@ -145,12 +147,15 @@ test_that("mc_feeds(details = TRUE) reads the nested payload", {
 
   # this endpoint proxies the RSS fetcher and nests under "feeds" instead of
   # paginating with "results"
-  resp <- httr2::response_json(200, body = list(
-    feeds = list(
-      list(id = 1L, url = "https://a.example/rss", last_fetch_success = TRUE),
-      list(id = 2L, url = "https://b.example/rss", last_fetch_success = FALSE)
+  resp <- httr2::response_json(
+    200,
+    body = list(
+      feeds = list(
+        list(id = 1L, url = "https://a.example/rss", last_fetch_success = TRUE),
+        list(id = 2L, url = "https://b.example/rss", last_fetch_success = FALSE)
+      )
     )
-  ))
+  )
   seen <- NULL
   out <- httr2::with_mocked_responses(
     function(req) {

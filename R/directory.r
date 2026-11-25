@@ -26,18 +26,21 @@
 #' }
 #'
 #' @export
-mc_collections <- function(name = NULL,
-                           source_id = NULL,
-                           max_results = Inf,
-                           .token = NULL) {
-  res <- mc_page_offset(
+mc_collections <- function(
+  name = NULL,
+  source_id = NULL,
+  max_results = Inf,
+  .token = NULL
+) {
+  mc_page_offset(
     "sources/collections/",
     name = name,
     source_id = source_id,
     max_results = max_results,
     .token = .token
-  )
-  mc_dates(as_tbl(res))
+  ) |>
+    as_tbl() |>
+    mc_dates()
 }
 
 
@@ -58,7 +61,10 @@ mc_collections <- function(name = NULL,
 mc_collection <- function(id, .token = NULL) {
   id <- check_id(id)
   body <- mc_get(paste0("sources/collections/", id, "/"), .token = .token)
-  with_raw(mc_dates(as_tbl(body)), attr(body, "response"))
+  body |>
+    as_tbl() |>
+    mc_dates() |>
+    with_raw(attr(body, "response"))
 }
 
 
@@ -89,18 +95,21 @@ mc_collection <- function(id, .token = NULL) {
 #' }
 #'
 #' @export
-mc_sources <- function(collection_id = NULL,
-                       name = NULL,
-                       max_results = Inf,
-                       .token = NULL) {
-  res <- mc_page_offset(
+mc_sources <- function(
+  collection_id = NULL,
+  name = NULL,
+  max_results = Inf,
+  .token = NULL
+) {
+  mc_page_offset(
     "sources/sources/",
     collection_id = collection_id,
     name = name,
     max_results = max_results,
     .token = .token
-  )
-  mc_dates(as_tbl(res))
+  ) |>
+    as_tbl() |>
+    mc_dates()
 }
 
 
@@ -120,7 +129,10 @@ mc_sources <- function(collection_id = NULL,
 mc_source <- function(id, .token = NULL) {
   id <- check_id(id)
   body <- mc_get(paste0("sources/sources/", id, "/"), .token = .token)
-  with_raw(mc_dates(as_tbl(body)), attr(body, "response"))
+  body |>
+    as_tbl() |>
+    mc_dates() |>
+    with_raw(attr(body, "response"))
 }
 
 
@@ -145,12 +157,14 @@ mc_source <- function(id, .token = NULL) {
 #' }
 #'
 #' @export
-mc_feeds <- function(source_id,
-                     modified_since = NULL,
-                     modified_before = NULL,
-                     details = FALSE,
-                     max_results = Inf,
-                     .token = NULL) {
+mc_feeds <- function(
+  source_id,
+  modified_since = NULL,
+  modified_before = NULL,
+  details = FALSE,
+  max_results = Inf,
+  .token = NULL
+) {
   source_id <- check_id(source_id)
   if (isTRUE(details)) {
     # this endpoint proxies the RSS fetcher and nests its payload under
@@ -160,21 +174,30 @@ mc_feeds <- function(source_id,
       source_id = source_id,
       .token = .token
     )
-    return(with_raw(mc_dates(as_tbl(body$feeds)), attr(body, "response")))
+    out <- body$feeds |>
+      as_tbl() |>
+      mc_dates() |>
+      with_raw(attr(body, "response"))
+    return(out)
   }
-  res <- mc_page_offset(
+  mc_page_offset(
     "sources/feeds/",
     source_id = source_id,
     modified_since = fmt_epoch(modified_since),
     modified_before = fmt_epoch(modified_before),
     max_results = max_results,
     .token = .token
-  )
-  mc_dates(as_tbl(res))
+  ) |>
+    as_tbl() |>
+    mc_dates()
 }
 
 
-check_id <- function(id, arg = rlang::caller_arg(id), call = rlang::caller_env()) {
+check_id <- function(
+  id,
+  arg = rlang::caller_arg(id),
+  call = rlang::caller_env()
+) {
   if (length(id) != 1L || is.na(id)) {
     cli::cli_abort("{.arg {arg}} must be a single id.", call = call)
   }

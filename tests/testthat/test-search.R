@@ -1,7 +1,10 @@
 test_that("search parameters use the names the API actually reads", {
   params <- mc_search_params(
-    "klima", "2026-08-01", "2026-08-07",
-    collection_id = 34412409, source_id = c(1, 2)
+    "klima",
+    "2026-08-01",
+    "2026-08-07",
+    collection_id = 34412409,
+    source_id = c(1, 2)
   )
   expect_equal(params$q, "klima")
   expect_equal(params$start, "2026-08-01")
@@ -17,7 +20,9 @@ test_that("search parameters use the names the API actually reads", {
 
 test_that("search parameters accept Date objects", {
   params <- mc_search_params(
-    "klima", as.Date("2026-08-01"), as.Date("2026-08-07"),
+    "klima",
+    as.Date("2026-08-01"),
+    as.Date("2026-08-07"),
     collection_id = 34412409
   )
   expect_equal(params$start, "2026-08-01")
@@ -49,8 +54,13 @@ test_that("an empty query is refused", {
 
 test_that("an unknown platform is refused", {
   expect_error(
-    mc_search_params("k", "2026-08-01", "2026-08-07",
-                     collection_id = 1, platform = "twitter"),
+    mc_search_params(
+      "k",
+      "2026-08-01",
+      "2026-08-07",
+      collection_id = 1,
+      platform = "twitter"
+    ),
     "twitter"
   )
 })
@@ -66,7 +76,12 @@ test_that("mc_story_count returns matching and total counts", {
       seen <<- req$url
       fixture_resp("total_count")
     },
-    mc_story_count("klima", "2026-08-01", "2026-08-07", collection_id = 34412409)
+    mc_story_count(
+      "klima",
+      "2026-08-01",
+      "2026-08-07",
+      collection_id = 34412409
+    )
   )
   expect_equal(nrow(out), 1L)
   expect_equal(out$relevant, 279L)
@@ -83,8 +98,12 @@ test_that("mc_count_over_time returns a daily series with totals attached", {
 
   out <- httr2::with_mocked_responses(
     mock_always(fixture_resp("count_over_time")),
-    mc_count_over_time("klima", "2026-08-01", "2026-08-07",
-                       collection_id = 34412409)
+    mc_count_over_time(
+      "klima",
+      "2026-08-01",
+      "2026-08-07",
+      collection_id = 34412409
+    )
   )
   expect_s3_class(out$date, "Date")
   expect_true(all(c("count", "total_count", "ratio") %in% names(out)))
@@ -103,11 +122,18 @@ test_that("mc_count_by_source unpacks the dashed result key", {
       seen <<- req$url
       fixture_resp("count_by_source")
     },
-    mc_count_by_source("klima", "2026-08-01", "2026-08-07",
-                       collection_id = 34412409, interval = "week")
+    mc_count_by_source(
+      "klima",
+      "2026-08-01",
+      "2026-08-07",
+      collection_id = 34412409,
+      interval = "week"
+    )
   )
-  expect_true(all(c("media_name", "bucket", "matching_stories",
-                    "total_stories", "ratio") %in% names(out)))
+  expect_true(all(
+    c("media_name", "bucket", "matching_stories", "total_stories", "ratio") %in%
+      names(out)
+  ))
   expect_s3_class(out$bucket, "Date")
   expect_match(seen, "interval=week")
 })
@@ -115,8 +141,13 @@ test_that("mc_count_by_source unpacks the dashed result key", {
 
 test_that("mc_count_by_source rejects an interval the server does not know", {
   expect_error(
-    mc_count_by_source("k", "2026-08-01", "2026-08-07",
-                       collection_id = 1, interval = "fortnight"),
+    mc_count_by_source(
+      "k",
+      "2026-08-01",
+      "2026-08-07",
+      collection_id = 1,
+      interval = "fortnight"
+    ),
     "fortnight"
   )
 })
@@ -128,8 +159,13 @@ test_that("mc_story_list parses story dates", {
 
   out <- httr2::with_mocked_responses(
     mock_always(fixture_resp("story_list")),
-    mc_story_list("klima", "2026-08-01", "2026-08-07",
-                  collection_id = 34412409, .token = NULL)
+    mc_story_list(
+      "klima",
+      "2026-08-01",
+      "2026-08-07",
+      collection_id = 34412409,
+      .token = NULL
+    )
   )
   expect_true(all(c("id", "title", "url", "media_name") %in% names(out)))
   expect_s3_class(out$publish_date, "Date")
@@ -147,9 +183,16 @@ test_that("mc_story_list sends the staff-only flags as the server spells them", 
       seen <<- req$url
       fixture_resp("story_list")
     },
-    mc_story_list("klima", "2026-08-01", "2026-08-07", collection_id = 1,
-                  expanded = TRUE, randomize = TRUE, page_size = 50,
-                  sort_order = "asc")
+    mc_story_list(
+      "klima",
+      "2026-08-01",
+      "2026-08-07",
+      collection_id = 1,
+      expanded = TRUE,
+      randomize = TRUE,
+      page_size = 50,
+      sort_order = "asc"
+    )
   )
   # the backend compares these against the string "1"
   expect_match(seen, "expanded=1")
@@ -186,8 +229,13 @@ test_that("mc_words passes a limit through", {
       seen <<- req$url
       fixture_resp("words")
     },
-    mc_words("klima", "2026-08-01", "2026-08-07",
-             collection_id = 34412409, limit = 5)
+    mc_words(
+      "klima",
+      "2026-08-01",
+      "2026-08-07",
+      collection_id = 34412409,
+      limit = 5
+    )
   )
   expect_true(all(c("term", "term_count", "doc_count") %in% names(out)))
   expect_match(seen, "limit=5")
@@ -206,7 +254,12 @@ test_that("mc_languages and mc_attention_by_source return tibbles", {
 
   srcs <- httr2::with_mocked_responses(
     mock_always(fixture_resp("search_sources")),
-    mc_attention_by_source("klima", "2026-08-01", "2026-08-07", collection_id = 1)
+    mc_attention_by_source(
+      "klima",
+      "2026-08-01",
+      "2026-08-07",
+      collection_id = 1
+    )
   )
   expect_true(all(c("source", "count") %in% names(srcs)))
 })
@@ -230,9 +283,12 @@ test_that("mc_story looks a story up by id, without a query or dates", {
   local_no_throttle()
 
   seen <- NULL
-  resp <- httr2::response_json(200, body = list(
-    story = list(id = "abc", title = "A story", publish_date = "2026-08-04")
-  ))
+  resp <- httr2::response_json(
+    200,
+    body = list(
+      story = list(id = "abc", title = "A story", publish_date = "2026-08-04")
+    )
+  )
   out <- httr2::with_mocked_responses(
     function(req) {
       seen <<- req$url
@@ -258,8 +314,12 @@ test_that("server-side validation errors are surfaced", {
   httr2::with_mocked_responses(
     mock_always(fixture_resp("error_422", status = 422)),
     expect_error(
-      mc_story_count("klima", "2026-08-01", "2026-08-07",
-                     collection_id = 34412409),
+      mc_story_count(
+        "klima",
+        "2026-08-01",
+        "2026-08-07",
+        collection_id = 34412409
+      ),
       "Must have at least one"
     )
   )
@@ -273,8 +333,13 @@ test_that("the staff-only refusal is surfaced with its own message", {
   httr2::with_mocked_responses(
     mock_always(fixture_resp("error_403", status = 403)),
     expect_error(
-      mc_story_list("klima", "2026-08-01", "2026-08-07",
-                    collection_id = 1, expanded = TRUE),
+      mc_story_list(
+        "klima",
+        "2026-08-01",
+        "2026-08-07",
+        collection_id = 1,
+        expanded = TRUE
+      ),
       "not permitted to fetch"
     )
   )

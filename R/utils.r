@@ -19,15 +19,18 @@ as_tbl <- function(x) {
   if (!is.null(names(x))) {
     x <- list(x)
   }
-  nms <- unique(unlist(lapply(x, names), use.names = FALSE))
+  nms <- lapply(x, names) |>
+    unlist(use.names = FALSE) |>
+    unique()
   if (is.null(nms)) {
     return(tibble::tibble(value = simplify_col(x)))
   }
-  cols <- lapply(nms, function(n) {
-    simplify_col(lapply(x, function(rec) rec[[n]] %||% NA))
-  })
-  names(cols) <- nms
-  tibble::new_tibble(cols, nrow = length(x))
+  lapply(nms, function(n) {
+    lapply(x, function(rec) rec[[n]] %||% NA) |>
+      simplify_col()
+  }) |>
+    stats::setNames(nms) |>
+    tibble::new_tibble(nrow = length(x))
 }
 
 
@@ -55,8 +58,8 @@ parse_dttm <- function(x) {
   if (!is.character(x)) {
     return(x)
   }
-  as.POSIXct(sub("T", " ", x, fixed = TRUE),
-             format = "%Y-%m-%d %H:%M:%OS", tz = "UTC")
+  sub("T", " ", x, fixed = TRUE) |>
+    as.POSIXct(format = "%Y-%m-%d %H:%M:%OS", tz = "UTC")
 }
 
 
@@ -64,7 +67,8 @@ parse_date <- function(x) {
   if (!is.character(x)) {
     return(x)
   }
-  as.Date(substr(x, 1L, 10L), format = "%Y-%m-%d")
+  substr(x, 1L, 10L) |>
+    as.Date(format = "%Y-%m-%d")
 }
 
 
@@ -75,9 +79,11 @@ parse_month <- function(x) {
   if (!is.character(x)) {
     return(x)
   }
-  out <- as.Date(rep(NA_character_, length(x)))
+  out <- rep(NA_character_, length(x)) |>
+    as.Date()
   short <- !is.na(x) & nchar(x) == 7L & grepl("/", x, fixed = TRUE)
-  out[short] <- as.Date(paste0("01/", x[short]), format = "%d/%m/%Y")
+  out[short] <- paste0("01/", x[short]) |>
+    as.Date(format = "%d/%m/%Y")
   out[!short] <- parse_date(x[!short])
   out
 }
@@ -107,15 +113,19 @@ mc_dates <- function(x) {
 
 # dates go out as YYYY-MM-DD; the server also accepts MM/DD/YYYY, but there is
 # no reason to send the ambiguous one
-fmt_date <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+fmt_date <- function(
+  x,
+  arg = rlang::caller_arg(x),
+  call = rlang::caller_env()
+) {
   if (is.null(x)) {
     return(NULL)
   }
   if (inherits(x, c("Date", "POSIXt"))) {
-    return(format(as.Date(x), "%Y-%m-%d"))
+    return(as.Date(x) |> format("%Y-%m-%d"))
   }
-  x <- as.character(x)
-  parsed <- as.Date(x, format = "%Y-%m-%d")
+  parsed <- as.character(x) |>
+    as.Date(format = "%Y-%m-%d")
   if (anyNA(parsed)) {
     cli::cli_abort(
       "{.arg {arg}} must be a {.cls Date} or a {.str YYYY-MM-DD} string.",
@@ -135,9 +145,12 @@ fmt_epoch <- function(x) {
     return(format(x, scientific = FALSE))
   }
   if (inherits(x, "Date")) {
-    x <- as.POSIXct(as.character(x), tz = "UTC")
+    x <- as.character(x) |>
+      as.POSIXct(tz = "UTC")
   }
-  format(as.numeric(as.POSIXct(x)), scientific = FALSE)
+  as.POSIXct(x) |>
+    as.numeric() |>
+    format(scientific = FALSE)
 }
 
 
@@ -146,7 +159,8 @@ fmt_ids <- function(x) {
   if (is.null(x) || length(x) == 0L) {
     return(NULL)
   }
-  paste(format(x, scientific = FALSE, trim = TRUE), collapse = ",")
+  format(x, scientific = FALSE, trim = TRUE) |>
+    paste(collapse = ",")
 }
 
 

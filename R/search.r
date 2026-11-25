@@ -10,13 +10,15 @@ mc_platforms <- c("onlinenews-mediacloud", "onlinenews-waybackmachine")
 #' minute — into an immediate error.
 #'
 #' @noRd
-mc_search_params <- function(query,
-                             start_date,
-                             end_date,
-                             collection_id = NULL,
-                             source_id = NULL,
-                             platform = mc_platforms,
-                             call = rlang::caller_env()) {
+mc_search_params <- function(
+  query,
+  start_date,
+  end_date,
+  collection_id = NULL,
+  source_id = NULL,
+  platform = mc_platforms,
+  call = rlang::caller_env()
+) {
   if (!rlang::is_string(query) || !nzchar(query)) {
     cli::cli_abort(
       c(
@@ -30,8 +32,11 @@ mc_search_params <- function(query,
 
   cs <- fmt_ids(collection_id)
   ss <- fmt_ids(source_id)
-  if (is.null(cs) && is.null(ss) &&
-        !isTRUE(getOption("mediacloud.allow_unrestricted_search", FALSE))) {
+  if (
+    is.null(cs) &&
+      is.null(ss) &&
+      !isTRUE(getOption("mediacloud.allow_unrestricted_search", FALSE))
+  ) {
     cli::cli_abort(
       c(
         "A search needs at least one {.arg collection_id} or {.arg source_id}.",
@@ -81,24 +86,30 @@ mc_search_params <- function(query,
 #' }
 #'
 #' @export
-mc_story_count <- function(query,
-                           start_date,
-                           end_date,
-                           collection_id = NULL,
-                           source_id = NULL,
-                           platform = mc_platforms,
-                           .token = NULL) {
+mc_story_count <- function(
+  query,
+  start_date,
+  end_date,
+  collection_id = NULL,
+  source_id = NULL,
+  platform = mc_platforms,
+  .token = NULL
+) {
   params <- mc_search_params(
-    query, start_date, end_date, collection_id, source_id, platform
+    query,
+    start_date,
+    end_date,
+    collection_id,
+    source_id,
+    platform
   )
-  body <- mc_perform(rlang::inject(
-    mc_req("search/total-count", !!!params, .token = .token)
-  ))
-  out <- tibble::tibble(
+  body <- mc_req("search/total-count", !!!params, .token = .token) |>
+    mc_perform()
+  tibble::tibble(
     relevant = body$count$relevant %||% NA_integer_,
     total = body$count$total %||% NA_integer_
-  )
-  with_raw(out, attr(body, "response"))
+  ) |>
+    with_raw(attr(body, "response"))
 }
 
 
@@ -116,24 +127,31 @@ mc_story_count <- function(query,
 #' }
 #'
 #' @export
-mc_count_over_time <- function(query,
-                               start_date,
-                               end_date,
-                               collection_id = NULL,
-                               source_id = NULL,
-                               platform = mc_platforms,
-                               .token = NULL) {
+mc_count_over_time <- function(
+  query,
+  start_date,
+  end_date,
+  collection_id = NULL,
+  source_id = NULL,
+  platform = mc_platforms,
+  .token = NULL
+) {
   params <- mc_search_params(
-    query, start_date, end_date, collection_id, source_id, platform
+    query,
+    start_date,
+    end_date,
+    collection_id,
+    source_id,
+    platform
   )
-  body <- mc_perform(rlang::inject(
-    mc_req("search/count-over-time", !!!params, .token = .token)
-  ))
+  body <- mc_req("search/count-over-time", !!!params, .token = .token) |>
+    mc_perform()
   cot <- body$count_over_time
-  out <- mc_dates(as_tbl(cot$counts))
-  attr(out, "total") <- cot$total
-  attr(out, "normalized_total") <- cot$normalized_total
-  with_raw(out, attr(body, "response"))
+  cot$counts |>
+    as_tbl() |>
+    mc_dates() |>
+    structure(total = cot$total, normalized_total = cot$normalized_total) |>
+    with_raw(attr(body, "response"))
 }
 
 
@@ -160,26 +178,36 @@ mc_count_over_time <- function(query,
 #' }
 #'
 #' @export
-mc_count_by_source <- function(query,
-                               start_date,
-                               end_date,
-                               collection_id = NULL,
-                               source_id = NULL,
-                               interval = c("week", "day", "month", "year"),
-                               platform = mc_platforms,
-                               .token = NULL) {
+mc_count_by_source <- function(
+  query,
+  start_date,
+  end_date,
+  collection_id = NULL,
+  source_id = NULL,
+  interval = c("week", "day", "month", "year"),
+  platform = mc_platforms,
+  .token = NULL
+) {
   interval <- rlang::arg_match(interval)
   params <- mc_search_params(
-    query, start_date, end_date, collection_id, source_id, platform
+    query,
+    start_date,
+    end_date,
+    collection_id,
+    source_id,
+    platform
   )
-  body <- mc_perform(rlang::inject(mc_req(
+  body <- mc_req(
     "search/count-by-source-over-interval",
     !!!params,
     interval = interval,
     .token = .token
-  )))
-  out <- mc_dates(as_tbl(body[["source-interval-attention"]]))
-  with_raw(out, attr(body, "response"))
+  ) |>
+    mc_perform()
+  body[["source-interval-attention"]] |>
+    as_tbl() |>
+    mc_dates() |>
+    with_raw(attr(body, "response"))
 }
 
 
@@ -212,22 +240,29 @@ mc_count_by_source <- function(query,
 #' }
 #'
 #' @export
-mc_story_list <- function(query,
-                          start_date,
-                          end_date,
-                          collection_id = NULL,
-                          source_id = NULL,
-                          max_results = Inf,
-                          page_size = NULL,
-                          sort_order = NULL,
-                          expanded = FALSE,
-                          randomize = FALSE,
-                          platform = mc_platforms,
-                          .token = NULL) {
+mc_story_list <- function(
+  query,
+  start_date,
+  end_date,
+  collection_id = NULL,
+  source_id = NULL,
+  max_results = Inf,
+  page_size = NULL,
+  sort_order = NULL,
+  expanded = FALSE,
+  randomize = FALSE,
+  platform = mc_platforms,
+  .token = NULL
+) {
   params <- mc_search_params(
-    query, start_date, end_date, collection_id, source_id, platform
+    query,
+    start_date,
+    end_date,
+    collection_id,
+    source_id,
+    platform
   )
-  res <- rlang::inject(mc_page_token(
+  mc_page_token(
     "search/story-list",
     !!!params,
     page_size = page_size,
@@ -237,8 +272,9 @@ mc_story_list <- function(query,
     randomize = if (isTRUE(randomize)) "1",
     max_results = max_results,
     .token = .token
-  ))
-  mc_dates(as_tbl(res))
+  ) |>
+    as_tbl() |>
+    mc_dates()
 }
 
 
@@ -259,20 +295,29 @@ mc_story_list <- function(query,
 #' }
 #'
 #' @export
-mc_story_sample <- function(query,
-                            start_date,
-                            end_date,
-                            collection_id = NULL,
-                            source_id = NULL,
-                            platform = mc_platforms,
-                            .token = NULL) {
+mc_story_sample <- function(
+  query,
+  start_date,
+  end_date,
+  collection_id = NULL,
+  source_id = NULL,
+  platform = mc_platforms,
+  .token = NULL
+) {
   params <- mc_search_params(
-    query, start_date, end_date, collection_id, source_id, platform
+    query,
+    start_date,
+    end_date,
+    collection_id,
+    source_id,
+    platform
   )
-  body <- mc_perform(rlang::inject(
-    mc_req("search/sample", !!!params, .token = .token)
-  ))
-  with_raw(mc_dates(as_tbl(body$sample)), attr(body, "response"))
+  body <- mc_req("search/sample", !!!params, .token = .token) |>
+    mc_perform()
+  body$sample |>
+    as_tbl() |>
+    mc_dates() |>
+    with_raw(attr(body, "response"))
 }
 
 
@@ -305,7 +350,10 @@ mc_story <- function(id, platform = mc_platforms, .token = NULL) {
     platform = platform,
     .token = .token
   )
-  with_raw(mc_dates(as_tbl(body$story)), attr(body, "response"))
+  body$story |>
+    as_tbl() |>
+    mc_dates() |>
+    with_raw(attr(body, "response"))
 }
 
 
@@ -326,21 +374,29 @@ mc_story <- function(id, platform = mc_platforms, .token = NULL) {
 #' }
 #'
 #' @export
-mc_words <- function(query,
-                     start_date,
-                     end_date,
-                     collection_id = NULL,
-                     source_id = NULL,
-                     limit = NULL,
-                     platform = mc_platforms,
-                     .token = NULL) {
+mc_words <- function(
+  query,
+  start_date,
+  end_date,
+  collection_id = NULL,
+  source_id = NULL,
+  limit = NULL,
+  platform = mc_platforms,
+  .token = NULL
+) {
   params <- mc_search_params(
-    query, start_date, end_date, collection_id, source_id, platform
+    query,
+    start_date,
+    end_date,
+    collection_id,
+    source_id,
+    platform
   )
-  body <- mc_perform(rlang::inject(
-    mc_req("search/words", !!!params, limit = limit, .token = .token)
-  ))
-  with_raw(as_tbl(body$words), attr(body, "response"))
+  body <- mc_req("search/words", !!!params, limit = limit, .token = .token) |>
+    mc_perform()
+  body$words |>
+    as_tbl() |>
+    with_raw(attr(body, "response"))
 }
 
 
@@ -362,20 +418,28 @@ mc_words <- function(query,
 #' }
 #'
 #' @export
-mc_attention_by_source <- function(query,
-                                   start_date,
-                                   end_date,
-                                   collection_id = NULL,
-                                   source_id = NULL,
-                                   platform = mc_platforms,
-                                   .token = NULL) {
+mc_attention_by_source <- function(
+  query,
+  start_date,
+  end_date,
+  collection_id = NULL,
+  source_id = NULL,
+  platform = mc_platforms,
+  .token = NULL
+) {
   params <- mc_search_params(
-    query, start_date, end_date, collection_id, source_id, platform
+    query,
+    start_date,
+    end_date,
+    collection_id,
+    source_id,
+    platform
   )
-  body <- mc_perform(rlang::inject(
-    mc_req("search/sources", !!!params, .token = .token)
-  ))
-  with_raw(as_tbl(body$sources), attr(body, "response"))
+  body <- mc_req("search/sources", !!!params, .token = .token) |>
+    mc_perform()
+  body$sources |>
+    as_tbl() |>
+    with_raw(attr(body, "response"))
 }
 
 
@@ -394,19 +458,32 @@ mc_attention_by_source <- function(query,
 #' }
 #'
 #' @export
-mc_languages <- function(query,
-                         start_date,
-                         end_date,
-                         collection_id = NULL,
-                         source_id = NULL,
-                         limit = NULL,
-                         platform = mc_platforms,
-                         .token = NULL) {
+mc_languages <- function(
+  query,
+  start_date,
+  end_date,
+  collection_id = NULL,
+  source_id = NULL,
+  limit = NULL,
+  platform = mc_platforms,
+  .token = NULL
+) {
   params <- mc_search_params(
-    query, start_date, end_date, collection_id, source_id, platform
+    query,
+    start_date,
+    end_date,
+    collection_id,
+    source_id,
+    platform
   )
-  body <- mc_perform(rlang::inject(
-    mc_req("search/languages", !!!params, limit = limit, .token = .token)
-  ))
-  with_raw(as_tbl(body$languages), attr(body, "response"))
+  body <- mc_req(
+    "search/languages",
+    !!!params,
+    limit = limit,
+    .token = .token
+  ) |>
+    mc_perform()
+  body$languages |>
+    as_tbl() |>
+    with_raw(attr(body, "response"))
 }

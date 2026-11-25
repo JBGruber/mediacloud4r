@@ -48,7 +48,11 @@ mc_find_collections <- function(country, max_results = Inf, .token = NULL) {
 #' }
 #'
 #' @export
-mc_collection_sources <- function(collection, max_results = Inf, .token = NULL) {
+mc_collection_sources <- function(
+  collection,
+  max_results = Inf,
+  .token = NULL
+) {
   id <- resolve_collection(collection, .token = .token)
   mc_sources(
     collection_id = id,
@@ -61,10 +65,12 @@ mc_collection_sources <- function(collection, max_results = Inf, .token = NULL) 
 # A name is only accepted when it identifies exactly one collection: picking
 # one of several silently would make a script's results depend on which
 # collections happened to exist when it ran.
-resolve_collection <- function(collection,
-                               .token = NULL,
-                               arg = rlang::caller_arg(collection),
-                               call = rlang::caller_env()) {
+resolve_collection <- function(
+  collection,
+  .token = NULL,
+  arg = rlang::caller_arg(collection),
+  call = rlang::caller_env()
+) {
   if (length(collection) != 1L || is.na(collection)) {
     cli::cli_abort("{.arg {arg}} must be a single id or name.", call = call)
   }
@@ -96,7 +102,8 @@ resolve_collection <- function(collection,
     return(found$id[1L])
   }
 
-  candidates <- utils::head(found[order(-found$source_count), ], 5L)
+  candidates <- found[order(-found$source_count), ] |>
+    utils::head(5L)
   cli::cli_abort(
     c(
       "{.val {collection}} matches {nrow(found)} collections.",

@@ -25,19 +25,19 @@ mc_user_agent <- function() {
 #'   stored one.
 #' @noRd
 mc_req <- function(.endpoint, ..., .token = NULL) {
-  req <- httr2::request(mc_base_url())
-  req <- httr2::req_url_path_append(req, .endpoint)
-  req <- req_token(req, .token = .token)
-  req <- httr2::req_headers(req, Accept = "application/json")
-  req <- httr2::req_user_agent(req, mc_user_agent())
-  req <- httr2::req_error(req, body = mc_error_body)
-  req <- httr2::req_retry(
-    req,
-    max_tries = getOption("mediacloud.max_tries", 3L),
-    is_transient = mc_is_transient,
-    backoff = function(i) min(60, 5 * 2^i)
-  )
-  req <- mc_throttle(req, .endpoint)
+  req <- mc_base_url() |>
+    httr2::request() |>
+    httr2::req_url_path_append(.endpoint) |>
+    req_token(.token = .token) |>
+    httr2::req_headers(Accept = "application/json") |>
+    httr2::req_user_agent(mc_user_agent()) |>
+    httr2::req_error(body = mc_error_body) |>
+    httr2::req_retry(
+      max_tries = getOption("mediacloud.max_tries", 3L),
+      is_transient = mc_is_transient,
+      backoff = function(i) min(60, 5 * 2^i)
+    ) |>
+    mc_throttle(.endpoint)
 
   params <- rlang::list2(...)
   params <- params[!vapply(params, is.null, logical(1))]
@@ -103,16 +103,20 @@ mc_error_body <- function(resp) {
   }
   # plain text, no cli markup: httr2 passes these lines through as they are,
   # so anything like {.run ...} would reach the user unrendered
-  info <- paste(as.character(msg), collapse = " ")
+  info <- as.character(msg) |>
+    paste(collapse = " ")
   status <- httr2::resp_status(resp)
   if (status == 403L) {
     info <- c(info, "Check that your token is valid with `mc_profile()`.")
   }
   if (status == 429L) {
-    info <- c(info, paste(
-      "The API allows 2 search requests per minute;",
-      "set `options(mediacloud.rate = )` if your key is allowed more."
-    ))
+    info <- c(
+      info,
+      paste(
+        "The API allows 2 search requests per minute;",
+        "set `options(mediacloud.rate = )` if your key is allowed more."
+      )
+    )
   }
   info
 }
@@ -142,7 +146,8 @@ mc_perform <- function(req) {
 
 
 mc_get <- function(.endpoint, ..., .token = NULL) {
-  mc_perform(mc_req(.endpoint, ..., .token = .token))
+  mc_req(.endpoint, ..., .token = .token) |>
+    mc_perform()
 }
 
 
@@ -154,12 +159,14 @@ mc_get <- function(.endpoint, ..., .token = NULL) {
 #' stop when it is `null`.
 #'
 #' @noRd
-mc_page_offset <- function(.endpoint,
-                           ...,
-                           max_results = Inf,
-                           .token = NULL,
-                           .key = "results",
-                           .progress = TRUE) {
+mc_page_offset <- function(
+  .endpoint,
+  ...,
+  max_results = Inf,
+  .token = NULL,
+  .key = "results",
+  .progress = TRUE
+) {
   limit <- if (is.finite(max_results)) min(100L, max_results) else 100L
   req <- mc_req(.endpoint, ..., limit = limit, .token = .token)
 
@@ -228,12 +235,14 @@ mc_next_req <- function(req, url) {
 #' the next call, and returns it as `null` on the last page.
 #'
 #' @noRd
-mc_page_token <- function(.endpoint,
-                          ...,
-                          max_results = Inf,
-                          .token = NULL,
-                          .key = "stories",
-                          .progress = TRUE) {
+mc_page_token <- function(
+  .endpoint,
+  ...,
+  max_results = Inf,
+  .token = NULL,
+  .key = "stories",
+  .progress = TRUE
+) {
   params <- rlang::list2(...)
   out <- list()
   token <- NULL
@@ -251,12 +260,13 @@ mc_page_token <- function(.endpoint,
   }
 
   repeat {
-    body <- mc_perform(rlang::inject(mc_req(
+    body <- mc_req(
       .endpoint,
       !!!params,
       pagination_token = token,
       .token = .token
-    )))
+    ) |>
+      mc_perform()
     page <- body[[.key]] %||% list()
     out <- c(out, page)
 
@@ -273,7 +283,9 @@ mc_page_token <- function(.endpoint,
     # array would parse to an empty list and slip past an is.null() check. An
     # empty page also means "done", so a server that kept handing back a token
     # cannot spin here forever.
-    if (length(token) == 0L || length(page) == 0L || length(out) >= max_results) {
+    if (
+      length(token) == 0L || length(page) == 0L || length(out) >= max_results
+    ) {
       break
     }
   }
