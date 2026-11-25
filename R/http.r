@@ -7,9 +7,9 @@ mc_base_url <- function() {
 
 mc_user_agent <- function() {
   paste0(
-    "mediacloud2/",
-    utils::packageVersion("mediacloud2"),
-    " (https://github.com/JBGruber/mediacloud2)"
+    "mediacloud4r/",
+    utils::packageVersion("mediacloud4r"),
+    " (https://github.com/JBGruber/mediacloud4r)"
   )
 }
 

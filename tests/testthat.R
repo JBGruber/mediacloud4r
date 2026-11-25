@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(mediacloud2)
+library(mediacloud4r)
 
-test_check("mediacloud2")
+test_check("mediacloud4r")

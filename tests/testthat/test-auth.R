@@ -10,7 +10,7 @@ test_that("mc_auth works", {
   # set token
   mc_auth(token = "test")
   expect_true(file.exists(file.path(
-    tools::R_user_dir("mediacloud2", "cache"),
+    tools::R_user_dir("mediacloud4r", "cache"),
     "fake-token.rds"
   )))
   # get token
@@ -53,7 +53,7 @@ test_that("empty tokens are rejected", {
 
   expect_error(mc_auth(token = ""), "Unable to retrieve or obtain token")
   expect_false(file.exists(file.path(
-    tools::R_user_dir("mediacloud2", "cache"),
+    tools::R_user_dir("mediacloud4r", "cache"),
     "fake-token.rds"
   )))
 })

@@ -40,7 +40,7 @@ mc_search_params <- function(
     cli::cli_abort(
       c(
         "A search needs at least one {.arg collection_id} or {.arg source_id}.",
-        "i" = "{.run mediacloud2::mc_collections(\"Germany\")} finds collection ids.",
+        "i" = "{.run mediacloud4r::mc_collections(\"Germany\")} finds collection ids.",
         "i" = paste(
           "Staff accounts may search the whole archive; they can set",
           "{.code options(mediacloud.allow_unrestricted_search = TRUE)}."

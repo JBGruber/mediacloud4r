@@ -23,7 +23,7 @@ token from the user (unless a token is supplied).
 }
 \details{
 After requesting the token, it is saved in the location returned by
-\code{file.path(tools::R_user_dir("mediacloud2", "cache"), Sys.getenv("MC_TOKEN", unset = "token.rds"))}. If you have multiple tokens, you can use
+\code{file.path(tools::R_user_dir("mediacloud4r", "cache"), Sys.getenv("MC_TOKEN", unset = "token.rds"))}. If you have multiple tokens, you can use
 \code{Sys.setenv(MC_TOKEN = "filename.rds")} to save/load the token with a
 different name.
 }
@@ -33,7 +33,7 @@ different name.
 mc_auth() # this will guide you through all steps
 
 # the token is stored in the location returned by this command
-file.path(tools::R_user_dir("mediacloud2", "cache"),
+file.path(tools::R_user_dir("mediacloud4r", "cache"),
           Sys.getenv("MC_TOKEN", unset = "token.rds"))
 
 # to use a different than the default file name for the token, set MC_TOKEN
@@ -43,11 +43,11 @@ Sys.setenv(MC_TOKEN = "identity-2.rds")
 mc_auth()
 
 # the cache now contains two tokens
-list.files(tools::R_user_dir("mediacloud2", "cache"))
+list.files(tools::R_user_dir("mediacloud4r", "cache"))
 
 # functions that interact with the API also take a .token argument with the
 # path. For example:
-tok_path <- file.path(tools::R_user_dir("mediacloud2", "cache"), "identity-2.rds")
+tok_path <- file.path(tools::R_user_dir("mediacloud4r", "cache"), "identity-2.rds")
 mc_collection_sources(34412409, .token = tok_path)
 }
 

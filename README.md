@@ -1,16 +1,16 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# mediacloud2 <img src="man/figures/logo.svg" align="right" height="139" alt="" />
+# mediacloud4r <img src="man/figures/logo.svg" align="right" height="139" alt="" />
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/JBGruber/mediacloud2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/JBGruber/mediacloud2/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/JBGruber/mediacloud4r/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/JBGruber/mediacloud4r/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/JBGruber/mediacloud2/graph/badge.svg)](https://app.codecov.io/gh/JBGruber/mediacloud2)
+coverage](https://codecov.io/gh/JBGruber/mediacloud4r/graph/badge.svg)](https://app.codecov.io/gh/JBGruber/mediacloud4r)
 <!-- badges: end -->
 
-The goal of mediacloud2 is to make the [Media
+The goal of mediacloud4r is to make the [Media
 Cloud](https://www.mediacloud.org) news archive usable from R. Media
 Cloud collects online news from tens of thousands of outlets worldwide
 and lets you search that archive by keyword, outlet, country and date.
@@ -22,16 +22,16 @@ your usual data wrangling and plotting code.
 
 ## Installation
 
-You can install the development version of mediacloud2 like so:
+You can install the development version of mediacloud4r like so:
 
 ``` r
-pak::pak("https://github.com/JBGruber/mediacloud2")
+pak::pak("https://github.com/JBGruber/mediacloud4r")
 ```
 
 # Basic Usage
 
 ``` r
-library(mediacloud2)
+library(mediacloud4r)
 ```
 
 ## Authentication
@@ -269,8 +269,8 @@ themselves](https://github.com/mediacloud/api-client).
 
 **This R Package**:
 
-> Gruber, J. B. (2026). *mediacloud2: MediaCloud API (v4) Wrapper*. R
-> package version 0.0.0.9000. <https://github.com/JBGruber/mediacloud2>
+> Gruber, J. B. (2026). *mediacloud4r: MediaCloud API (v4) Wrapper*. R
+> package version 0.0.0.9000. <https://github.com/JBGruber/mediacloud4r>
 
 **The API**:
 
